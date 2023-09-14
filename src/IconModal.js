@@ -1,12 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState,useEffect } from 'react';
 
-const IconModal = ({onClose}) => {
-    const fileInput = useRef(null);
+const IconModal = ({ onClose }) => {
+  const fileInput = useRef(null);
+  const [selectedTab, setSelectedTab] = useState('imagen'); // Estado para controlar la pestaña seleccionada
+  const [images, setImages] = useState([]);
 
-    const handleFileUpload = () => {
-        fileInput.current.click();
-    };
-  
+  const handleFileUpload = () => {
+    fileInput.current.click();
+  };
+
+  useEffect(() => {
+    // Obtener la lista de imágenes de la carpeta "images"
+    const importAll = (r) => r.keys().map(r);
+    const imagesContext = require.context('./images', false, /\.(png|jpe?g|svg)$/);
+    const imagesList = importAll(imagesContext);
+    setImages(imagesList);
+  }, []);
+
   return (
     <div
       style={{
@@ -27,36 +37,84 @@ const IconModal = ({onClose}) => {
           height: '80%',
           backgroundColor: '#FFFFFF',
           display: 'flex',
-          flexDirection: 'column', // Cambia la dirección del flex a columna
-          //border: '1px solid #000',
+          flexDirection: 'column',
           boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
           borderRadius: '2px'
         }}
       >
         <div
           style={{
-            flexBasis: '10%', // Toma el 10% de la altura del modal
+            flexBasis: '10%',
             display: 'flex',
-            justifyContent: 'space-between', // Separa los elementos en el div
-            alignItems: 'center',
-            paddingRight: '20px', // Agrega un espacio a la derecha
-            paddingLeft: '20px', // Agrega un espacio a la izquierda
             borderBottom: '1px solid #D1D1D1',
           }}
         >
-          <p style={{fontWeight: 'bold'}}>Seleccionar o Cargar Imagen</p> {/* Texto en negrita */}
-          <button onClick={onClose} style={{marginLeft:'auto'}}>Cerrar</button>
+          <div
+            onClick={() => setSelectedTab('imagen')} // Cambiar a la pestaña de imágenes
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              cursor: 'pointer',
+              padding: '10px',
+              backgroundColor: selectedTab === 'imagen' ? '#F1F1F1' : '#FFFFFF',
+              borderBottom: selectedTab === 'imagen' ? '4px solid #F1F1F1' : '4px solid #FFFFFF',
+            }}
+          >
+            <p style={{ fontWeight: 'bold', margin: '0' }}>Seleccionar o Cargar Imagen</p>
+          </div>
+          <div
+            onClick={() => setSelectedTab('plantilla')} // Cambiar a la pestaña de plantillas
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              cursor: 'pointer',
+              padding: '10px',
+              backgroundColor: selectedTab === 'plantilla' ? '#F1F1F1' : '#FFFFFF',
+              borderBottom: selectedTab === 'plantilla' ? '4px solid #F1F1F1' : '4px solid #FFFFFF',
+            }}
+          >
+            <p style={{ fontWeight: 'bold', margin: '0' }}>Escoger Plantilla</p>
+          </div>
         </div>
         <div
           style={{
-            flexBasis: '90%', // Toma el 90% de la altura del modal
+            flexBasis: '90%',
             display: 'flex',
-            justifyContent: 'center', // Separa los elementos en el div
+            justifyContent: 'center',
             alignItems: 'center',
+            flexDirection: 'row', // Alinear contenido al centro verticalmente
           }}
         >
-          <button onClick={handleFileUpload}>Seleccionar archivo</button>
-          <input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{display:'none'}} /> {/* Input de archivo oculto */}     
+          {selectedTab != 'imagen' ? ( // Mostrar imágenes o mensaje según la pestaña seleccionada
+            images.length > 0 ? (
+              images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Imagen ${index}`}
+                  style={{ maxWidth: '40%', maxHeight: '40%', margin: '5px' }}
+                />
+              ))
+            ) : (
+              <p>No hay plantillas</p>
+            )
+          ) : (
+            <><button onClick={handleFileUpload}>Seleccionar archivo</button><input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></> 
+          )}
+        </div>
+        <div
+          style={{
+            flexBasis: '10%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingRight: '20px',
+            paddingLeft: '20px',
+            borderTop: '1px solid #D1D1D1', // Agregar borde superior
+          }}
+        >
+          {/* <p style={{ fontWeight: 'bold' }}>Seleccionar o Cargar Imagen</p> */}
+          <button onClick={onClose} style={{ marginLeft: 'auto' }}>Cerrar</button>
         </div>
       </div>
     </div>
@@ -64,3 +122,4 @@ const IconModal = ({onClose}) => {
 };
 
 export default IconModal;
+
