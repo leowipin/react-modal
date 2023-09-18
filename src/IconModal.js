@@ -4,6 +4,7 @@ const IconModal = ({ onClose }) => {
   const fileInput = useRef(null);
   const [selectedTab, setSelectedTab] = useState('imagen'); // Estado para controlar la pestaña seleccionada
   const [images, setImages] = useState([]);
+  const contentRef = useRef(null);
 
   const handleFileUpload = () => {
     fileInput.current.click();
@@ -17,6 +18,7 @@ const IconModal = ({ onClose }) => {
     setImages(imagesList);
   }, []);
 
+
   return (
     <div
       style={{
@@ -28,7 +30,8 @@ const IconModal = ({ onClose }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        overflow: 'hidden', // Oculta el desbordamiento
       }}
     >
       <div
@@ -39,7 +42,8 @@ const IconModal = ({ onClose }) => {
           display: 'flex',
           flexDirection: 'column',
           boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
-          borderRadius: '2px'
+          borderRadius: '2px',
+          overflow: 'hidden', // Oculta el desbordamiento
         }}
       >
         <div
@@ -50,7 +54,7 @@ const IconModal = ({ onClose }) => {
           }}
         >
           <div
-            onClick={() => setSelectedTab('imagen')} // Cambiar a la pestaña de imágenes
+            onClick={() => setSelectedTab('imagen')}
             style={{
               flex: 1,
               textAlign: 'center',
@@ -63,7 +67,7 @@ const IconModal = ({ onClose }) => {
             <p style={{ fontWeight: 'bold', margin: '0' }}>Seleccionar o Cargar Imagen</p>
           </div>
           <div
-            onClick={() => setSelectedTab('plantilla')} // Cambiar a la pestaña de plantillas
+            onClick={() => setSelectedTab('plantilla')}
             style={{
               flex: 1,
               textAlign: 'center',
@@ -80,26 +84,41 @@ const IconModal = ({ onClose }) => {
           style={{
             flexBasis: '90%',
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row', // Alinear contenido al centro verticalmente
+            flexDirection: 'column',
+            overflowY: 'auto', // Habilita la barra de desplazamiento vertical
           }}
+          ref={contentRef}
         >
-          {selectedTab != 'imagen' ? ( // Mostrar imágenes o mensaje según la pestaña seleccionada
-            images.length > 0 ? (
-              images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Imagen ${index}`}
-                  style={{ maxWidth: '40%', maxHeight: '40%', margin: '5px' }}
-                />
-              ))
-            ) : (
-              <p>No hay plantillas</p>
-            )
+          {selectedTab !== 'imagen' ? (
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
+              {images.length > 0 ? (
+                images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Imagen ${index}`}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      margin: '5px',
+                      width: '150px', // Ancho máximo de cada imagen
+                      height: 'auto',
+                    }}
+                  />
+                ))
+              ) : (
+                <p>No hay plantillas</p>
+              )}
+            </div>
           ) : (
             <><button onClick={handleFileUpload}>Seleccionar archivo</button><input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></> 
+
           )}
         </div>
         <div
@@ -110,16 +129,18 @@ const IconModal = ({ onClose }) => {
             alignItems: 'center',
             paddingRight: '20px',
             paddingLeft: '20px',
-            borderTop: '1px solid #D1D1D1', // Agregar borde superior
+            borderTop: '1px solid #D1D1D1',
           }}
         >
-          {/* <p style={{ fontWeight: 'bold' }}>Seleccionar o Cargar Imagen</p> */}
+          <p style={{ fontWeight: 'bold' }}>Seleccionar o Cargar Imagen</p>
           <button onClick={onClose} style={{ marginLeft: 'auto' }}>Cerrar</button>
         </div>
       </div>
+    
+    
+     
     </div>
   );
 };
 
 export default IconModal;
-
