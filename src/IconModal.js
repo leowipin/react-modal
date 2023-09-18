@@ -59,12 +59,10 @@ const IconModal = ({ onClose }) => {
               flex: 1,
               textAlign: 'center',
               cursor: 'pointer',
-              padding: '10px',
               backgroundColor: selectedTab === 'imagen' ? '#F1F1F1' : '#FFFFFF',
-              borderBottom: selectedTab === 'imagen' ? '4px solid #F1F1F1' : '4px solid #FFFFFF',
             }}
           >
-            <p style={{ fontWeight: 'bold', margin: '0' }}>Seleccionar o Cargar Imagen</p>
+            <p style={{ fontWeight: 'bold',}}>Cargar Icono</p>
           </div>
           <div
             onClick={() => setSelectedTab('plantilla')}
@@ -72,12 +70,10 @@ const IconModal = ({ onClose }) => {
               flex: 1,
               textAlign: 'center',
               cursor: 'pointer',
-              padding: '10px',
               backgroundColor: selectedTab === 'plantilla' ? '#F1F1F1' : '#FFFFFF',
-              borderBottom: selectedTab === 'plantilla' ? '4px solid #F1F1F1' : '4px solid #FFFFFF',
             }}
           >
-            <p style={{ fontWeight: 'bold', margin: '0' }}>Escoger Plantilla</p>
+            <p style={{ fontWeight: 'bold',}}>Escoger Icono</p>
           </div>
         </div>
         <div
@@ -86,6 +82,8 @@ const IconModal = ({ onClose }) => {
             display: 'flex',
             flexDirection: 'column',
             overflowY: 'auto', // Habilita la barra de desplazamiento vertical
+            alignItems: 'center',
+            justifyContent: selectedTab === 'imagen' ? 'center' : 'flex-start',
           }}
           ref={contentRef}
         >
@@ -117,7 +115,7 @@ const IconModal = ({ onClose }) => {
               )}
             </div>
           ) : (
-            <><button onClick={handleFileUpload}>Seleccionar archivo</button><input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></> 
+            <><button onClick={handleFileUpload}>Seleccionar Icono</button><input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></> 
 
           )}
         </div>
@@ -132,7 +130,6 @@ const IconModal = ({ onClose }) => {
             borderTop: '1px solid #D1D1D1',
           }}
         >
-          <p style={{ fontWeight: 'bold' }}>Seleccionar o Cargar Imagen</p>
           <button onClick={onClose} style={{ marginLeft: 'auto' }}>Cerrar</button>
         </div>
       </div>
