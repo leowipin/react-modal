@@ -1,4 +1,4 @@
-import React, { useRef, useState,useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 const IconModal = ({ onClose }) => {
   const fileInput = useRef(null);
@@ -62,7 +62,7 @@ const IconModal = ({ onClose }) => {
               backgroundColor: selectedTab === 'imagen' ? '#F1F1F1' : '#FFFFFF',
             }}
           >
-            <p style={{ fontWeight: 'bold', fontSize: '19px'}}>Cargar Icono</p>
+            <p style={{ fontWeight: 'bold', fontSize: '19px' }}>Cargar Icono</p>
           </div>
           <div
             onClick={() => setSelectedTab('plantilla')}
@@ -73,7 +73,7 @@ const IconModal = ({ onClose }) => {
               backgroundColor: selectedTab === 'plantilla' ? '#F1F1F1' : '#FFFFFF',
             }}
           >
-            <p style={{ fontWeight: 'bold', fontSize: '19px'}}>Escoger Icono</p>
+            <p style={{ fontWeight: 'bold', fontSize: '19px' }}>Escoger Icono</p>
           </div>
         </div>
         <div
@@ -115,26 +115,26 @@ const IconModal = ({ onClose }) => {
               )}
             </div>
           ) : (
-            <><button onClick={handleFileUpload}
-            style={{
-              fontSize: '16px',
-              padding: '12px 18px',
-              border: '1px solid #bababa',
-              borderRadius: '0.25rem',
-              borderColor: '#4f69ff',
-              color: '#4f69ff',
-              backgroundColor: '#F1F1F1',
-              cursor: 'pointer',
-              transition: 'background-color 0.5s ease',
-              
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#d9d9d9';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#F1F1F1';
-            }}>
-            Seleccionar Icono</button><input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></> 
+            <><button type='button' onClick={handleFileUpload}
+              style={{
+                fontSize: '16px',
+                padding: '12px 18px',
+                border: '1px solid #bababa',
+                borderRadius: '0.25rem',
+                borderColor: '#4f69ff',
+                color: '#4f69ff',
+                backgroundColor: '#F1F1F1',
+                cursor: 'pointer',
+                transition: 'background-color 0.5s ease',
+
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#d9d9d9';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#F1F1F1';
+              }}>
+              Seleccionar Icono</button><input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></>
           )}
         </div>
         <div
@@ -149,16 +149,16 @@ const IconModal = ({ onClose }) => {
             backgroundColor: '#F1F1F1',
           }}
         >
-          <button onClick={onClose} 
-          style={{ 
-            fontSize: '16px',
-            padding: '8px 12px',
-            border: '1px solid #bababa',
-            borderRadius: '0.25rem',
-            backgroundColor: '#F1F1F1',
-            cursor: 'pointer',
-            transition: 'background-color 0.5s ease',
-              
+          <button type='button' onClick={onClose}
+            style={{
+              fontSize: '16px',
+              padding: '8px 12px',
+              border: '1px solid #bababa',
+              borderRadius: '0.25rem',
+              backgroundColor: '#F1F1F1',
+              cursor: 'pointer',
+              transition: 'background-color 0.5s ease',
+
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.backgroundColor = '#d9d9d9';
@@ -166,19 +166,19 @@ const IconModal = ({ onClose }) => {
             onMouseOut={(e) => {
               e.currentTarget.style.backgroundColor = '#F1F1F1';
             }}>
-          Cerrar</button>
-          <button 
-          style={{
-            color: 'white',
-            marginLeft: '10px',
-            fontSize: '16px',
-            padding: '8px 12px',
-            border: '1px solid #bababa',
-            borderRadius: '0.25rem',
-            backgroundColor: '#4f69ff',
-            cursor: 'pointer',
-            transition: 'background-color 0.5s ease',
-              
+            Cerrar</button>
+          <button type='button'
+            style={{
+              color: 'white',
+              marginLeft: '10px',
+              fontSize: '16px',
+              padding: '8px 12px',
+              border: '1px solid #bababa',
+              borderRadius: '0.25rem',
+              backgroundColor: '#4f69ff',
+              cursor: 'pointer',
+              transition: 'background-color 0.5s ease',
+
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.backgroundColor = '#4044ff';
@@ -186,12 +186,9 @@ const IconModal = ({ onClose }) => {
             onMouseOut={(e) => {
               e.currentTarget.style.backgroundColor = '#4f69ff';
             }}>
-          Seleccionar</button>
+            Seleccionar</button>
         </div>
       </div>
-    
-    
-     
     </div>
   );
 };
