@@ -6,6 +6,7 @@ const IconModal = ({ onClose }) => {
   const [images, setImages] = useState([]);
   const contentRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [disabled, setDisabled] = useState(true);
 
   const handleFileUpload = () => {
     fileInput.current.click();
@@ -14,11 +15,16 @@ const IconModal = ({ onClose }) => {
       const reader = new FileReader();
       reader.onload = () => {
         setSelectedImage(reader.result);
-        //cambiar el value de icon-input
+        setDisabled(false);
       };
       reader.readAsDataURL(file);
     }
   };
+
+  const handleSelectImage = () => {
+    console.log(selectedImage)
+  };
+  
 
   useEffect(() => {
     // Obtener la lista de imágenes de la carpeta "images"
@@ -133,7 +139,12 @@ const IconModal = ({ onClose }) => {
                     width: '150px',
                     height: '150px'
                   }}/>
-                  <button onClick={() => setSelectedImage(null)} style={{
+                  <button type='button' 
+                  onClick={() => {
+                    setSelectedImage(null);
+                    setDisabled(true);
+                  }} 
+                  style={{
                     fontSize: '16px',
                     padding: '5px 9px',
                     border: '1px solid #bababa',
@@ -213,6 +224,8 @@ const IconModal = ({ onClose }) => {
             }}>
             Cerrar</button>
           <button type='button'
+            disabled={disabled}
+            onClick={handleSelectImage}
             style={{
               color: 'white',
               marginLeft: '10px',
