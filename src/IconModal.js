@@ -5,9 +5,19 @@ const IconModal = ({ onClose }) => {
   const [selectedTab, setSelectedTab] = useState('imagen'); // Estado para controlar la pestaña seleccionada
   const [images, setImages] = useState([]);
   const contentRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleFileUpload = () => {
     fileInput.current.click();
+    fileInput.current.onchange = e => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        setSelectedImage(reader.result);
+        //cambiar el value de icon-input
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   useEffect(() => {
@@ -106,7 +116,7 @@ const IconModal = ({ onClose }) => {
                       maxHeight: '100%',
                       margin: '5px',
                       width: '150px', // Ancho máximo de cada imagen
-                      height: 'auto',
+                      height: '150px',
                     }}
                   />
                 ))
@@ -115,26 +125,61 @@ const IconModal = ({ onClose }) => {
               )}
             </div>
           ) : (
-            <><button type='button' onClick={handleFileUpload}
-              style={{
-                fontSize: '16px',
-                padding: '12px 18px',
-                border: '1px solid #bababa',
-                borderRadius: '0.25rem',
-                borderColor: '#4f69ff',
-                color: '#4f69ff',
-                backgroundColor: '#F1F1F1',
-                cursor: 'pointer',
-                transition: 'background-color 0.5s ease',
+            <>
+              {selectedImage ? (
+                <>
+                  <img src={selectedImage}
+                  style={{
+                    width: '150px',
+                    height: '150px'
+                  }}/>
+                  <button onClick={() => setSelectedImage(null)} style={{
+                    fontSize: '16px',
+                    padding: '5px 9px',
+                    border: '1px solid #bababa',
+                    borderRadius: '0.25rem',
+                    marginTop: '10px',
+                    backgroundColor: '#F1F1F1',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.5s ease',
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = '#d9d9d9';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = '#F1F1F1';
+                  }}
+                  >
+                    <img src="trash.png" alt="Eliminar"
+                    style={{
+                      width: '25px',
+                      height: '25px',
+                    }} /> 
+                  </button>
+                </>
+              ) : (
+                <button type='button' onClick={handleFileUpload}
+                  style={{
+                    fontSize: '16px',
+                    padding: '12px 18px',
+                    border: '1px solid #bababa',
+                    borderRadius: '0.25rem',
+                    borderColor: '#4f69ff',
+                    color: '#4f69ff',
+                    backgroundColor: '#F1F1F1',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.5s ease',
 
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = '#d9d9d9';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = '#F1F1F1';
-              }}>
-              Seleccionar Icono</button><input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></>
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = '#d9d9d9';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = '#F1F1F1';
+                  }}>
+                  Seleccionar Icono</button>
+                  )}
+              <input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></>
           )}
         </div>
         <div
