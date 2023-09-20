@@ -8,9 +8,7 @@ const IconModal = ({ onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-  const [selectedImagePath, setSelectedImagePath] = useState(null); 
-  const path = "";
-
+ 
   const handleFileUpload = () => {
     fileInput.current.click();
     fileInput.current.onchange = e => {
@@ -24,44 +22,35 @@ const IconModal = ({ onClose }) => {
     }
   };
 
-  const handleFileSelection = (path) => {
+  const handleFileSelection = () => {
     const img = new Image();
   
     img.onload = () => {
-      setSelectedImage(path);
+      setSelectedImage(selectedImage);
       setDisabled(false);
     };
-  
-    img.onerror = () => {
-      console.error("Error al cargar la imagen desde la ruta:", path);
-    };
-  
-    img.src = path;
-   
+     
   };
-
-
-  const toggleImageSelection = (index) => {
+   const toggleImageSelection = (index) => {
     if (selectedImageIndex === index) {
       // Si se hace clic en la imagen ya seleccionada, deselecciónala
       setSelectedImageIndex(null);
     } else {
       // Si se hace clic en una imagen diferente, actualiza la selección
       setSelectedImageIndex(index);
+      setDisabled(false);
+      setSelectedImage(images[index])
       handleImageClick(index);
     }
   };
 
-  // Llama a handleFileSelection con la imagen seleccionada
+   // Llama a handleFileSelection con la imagen seleccionada
   const handleImageClick = (index) => {
     const selectedImage = images[index];
-    setSelectedImageIndex(index);
-    setSelectedImagePath(selectedImage); 
-    handleFileSelection(selectedImage.src);
+    handleFileSelection(selectedImage);
   };
 
-  const handleSelectImage = () => {
-
+  const handleSelectImage = () => {   
     console.log(selectedImage)
   };
 
