@@ -2,12 +2,13 @@ import React, { useRef, useState, useEffect } from 'react';
 
 const IconModal = ({ onClose }) => {
   const fileInput = useRef(null);
-  const [selectedTab, setSelectedTab] = useState('imagen'); // Estado para controlar la pestaña seleccionada
+  const [selectedTab, setSelectedTab] = useState('imagen');
   const [images, setImages] = useState([]);
   const contentRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [imagesPath, setImagesPath] = useState([]);
  
   const handleFileUpload = () => {
     fileInput.current.click();
@@ -22,21 +23,11 @@ const IconModal = ({ onClose }) => {
     }
   };
 
-  const handleFileSelection = () => {
-    const img = new Image();
-  
-    img.onload = () => {
-      setSelectedImage(selectedImage);
-      setDisabled(false);
-    };
-     
-  };
+
    const toggleImageSelection = (index) => {
     if (selectedImageIndex === index) {
-      // Si se hace clic en la imagen ya seleccionada, deselecciónala
       setSelectedImageIndex(null);
     } else {
-      // Si se hace clic en una imagen diferente, actualiza la selección
       setSelectedImageIndex(index);
       setDisabled(false);
       setSelectedImage(images[index])
@@ -44,10 +35,25 @@ const IconModal = ({ onClose }) => {
     }
   };
 
-   // Llama a handleFileSelection con la imagen seleccionada
-  const handleImageClick = (index) => {
-    const selectedImage = images[index];
-    handleFileSelection(selectedImage);
+  const handleImageClick = async (index) => {
+    let imagePath = imagesPath[index];
+
+    const serverURL = 'http://localhost:3000/uploads/assignment/icon/iconos_base/';
+    imagePath = imagePath.replace('./', serverURL);
+
+    const fileName = imagePath.split('/').pop();
+    
+    const response = await fetch(imagePath);
+    const blob = await response.blob();
+
+    const reader = new FileReader();
+
+    reader.onloadend = function() {
+      setSelectedImage(reader.result);
+    }
+
+    reader.readAsDataURL(blob);
+
   };
 
   const handleSelectImage = () => {   
@@ -56,11 +62,20 @@ const IconModal = ({ onClose }) => {
 
 
   useEffect(() => {
-    // Obtener la lista de imágenes de la carpeta "images"
-    const importAll = (r) => r.keys().map(r);
+    const importAll = (r) => {
+      return r.keys().map((key, index) => ({
+        image: r(key),
+        path: key
+      }));
+    };
     const imagesContext = require.context('./images', false, /\.(png|jpe?g|svg)$/);
     const imagesList = importAll(imagesContext);
-    setImages(imagesList);
+    
+    const images = imagesList.map(item => item.image);
+    const imagesPath = imagesList.map(item => item.path);
+  
+    setImages(images);
+    setImagesPath(imagesPath);
   }, []);
 
 
@@ -76,7 +91,7 @@ const IconModal = ({ onClose }) => {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        overflow: 'hidden', // Oculta el desbordamiento
+        overflow: 'hidden',
       }}
     >
       <div
@@ -88,7 +103,7 @@ const IconModal = ({ onClose }) => {
           flexDirection: 'column',
           boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
           borderRadius: '2px',
-          overflow: 'hidden', // Oculta el desbordamiento
+          overflow: 'hidden',
         }}
       >
         <div
@@ -126,7 +141,7 @@ const IconModal = ({ onClose }) => {
             flexBasis: '90%',
             display: 'flex',
             flexDirection: 'column',
-            overflowY: 'auto', // Habilita la barra de desplazamiento vertical
+            overflowY: 'auto',
             alignItems: 'center',
             justifyContent: selectedTab === 'imagen' ? 'center' : 'flex-start',
           }}
