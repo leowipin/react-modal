@@ -4,12 +4,18 @@ const IconModal = ({ onClose }) => {
   const fileInput = useRef(null);
   const [selectedTab, setSelectedTab] = useState('imagen');
   const [images, setImages] = useState([]);
+  const [imagesPasadas, setImagesPasadas] = useState([]);
   const contentRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [imagesPath, setImagesPath] = useState([]);
- 
+  const [imagesPathPasadas, setImagesPathPasadas] = useState([]);
+  const [selectedImageIndexPasadas, setSelectedImageIndexPasadas] = useState(null);
+  const [id, setid] = useState([]);
+
+
+
   const handleFileUpload = () => {
     fileInput.current.click();
     fileInput.current.onchange = e => {
@@ -21,14 +27,28 @@ const IconModal = ({ onClose }) => {
       };
       reader.readAsDataURL(file);
     }
+
+    // Aqui Logica del post de la imagen
   };
 
 
-   const toggleImageSelection = (index) => {
+  const toggleImageSelection = (index) => {
     if (selectedImageIndex === index) {
       setSelectedImageIndex(null);
     } else {
+      console.log(imagesPath[index])
       setSelectedImageIndex(index);
+      setDisabled(false);
+      setSelectedImage(images[index])
+      handleImageClick(index);
+    }
+  };
+
+  const toggleImageSelectionPasadas = (index) => {
+    if (selectedImageIndexPasadas === index) {
+      setSelectedImageIndexPasadas(null);
+    } else {
+      setSelectedImageIndexPasadas(index);
       setDisabled(false);
       setSelectedImage(images[index])
       handleImageClick(index);
@@ -42,13 +62,13 @@ const IconModal = ({ onClose }) => {
     imagePath = imagePath.replace('./', serverURL);
 
     const fileName = imagePath.split('/').pop();
-    
+
     const response = await fetch(imagePath);
     const blob = await response.blob();
 
     const reader = new FileReader();
 
-    reader.onloadend = function() {
+    reader.onloadend = function () {
       setSelectedImage(reader.result);
     }
 
@@ -56,7 +76,7 @@ const IconModal = ({ onClose }) => {
 
   };
 
-  const handleSelectImage = () => {   
+  const handleSelectImage = () => {
     console.log(selectedImage)
   };
 
@@ -68,16 +88,33 @@ const IconModal = ({ onClose }) => {
         path: key
       }));
     };
+
+    // Logica de setear el id del profesor 
+    setid("./1");
     const imagesContext = require.context('./images', false, /\.(png|jpe?g|svg)$/);
     const imagesList = importAll(imagesContext);
-    
+
     const images = imagesList.map(item => item.image);
     const imagesPath = imagesList.map(item => item.path);
-  
+
+
+
     setImages(images);
     setImagesPath(imagesPath);
+
+    const imagesContext2 = require.context('./imagespasadas', false, /\.(png|jpe?g|svg)$/);
+    const imagesList2 = importAll(imagesContext2);
+
+    const images2 = imagesList2.map(item => item.image);
+    const imagesPath2 = imagesList2.map(item => item.path);
+
+    setImagesPasadas(images2);
+    setImagesPathPasadas(imagesPath2);
   }, []);
 
+  let originalIndex = 0;
+  const basePath = './imagespasadas';
+  const filteredImages = imagesPathPasadas.filter((imagePath) => imagePath.startsWith(`${id}-`)); // Filtrar las imágenes que comienzan con 'id' en su nombre
 
   return (
     <div
@@ -125,6 +162,17 @@ const IconModal = ({ onClose }) => {
             <p style={{ fontWeight: 'bold', fontSize: '19px' }}>Cargar Icono</p>
           </div>
           <div
+            onClick={() => setSelectedTab('pasadas')}
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              cursor: 'pointer',
+              backgroundColor: selectedTab === 'pasadas' ? '#F1F1F1' : '#FFFFFF',
+            }}
+          >
+            <p style={{ fontWeight: 'bold', fontSize: '19px' }}>Imagenes Pasadas</p>
+          </div>
+          <div
             onClick={() => setSelectedTab('plantilla')}
             style={{
               flex: 1,
@@ -133,6 +181,7 @@ const IconModal = ({ onClose }) => {
               backgroundColor: selectedTab === 'plantilla' ? '#F1F1F1' : '#FFFFFF',
             }}
           >
+
             <p style={{ fontWeight: 'bold', fontSize: '19px' }}>Escoger Icono</p>
           </div>
         </div>
@@ -147,7 +196,7 @@ const IconModal = ({ onClose }) => {
           }}
           ref={contentRef}
         >
-          {selectedTab !== 'imagen' ? (
+          {selectedTab === 'plantilla' ? (
             <div
               style={{
                 display: 'flex',
@@ -156,34 +205,74 @@ const IconModal = ({ onClose }) => {
               }}
             >
               {images.length > 0 ? (
-              images.map((image, index) => (
-                <div
-                  key={index}
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    margin: '5px',
-                    width: '150px',
-                    height: '150px',
-                    border: selectedImageIndex === index ? '2px solid blue' : 'none',
-                  }}
-                  onClick={() => toggleImageSelection(index)}
-                >
-                  <img
-                    src={image}
-                    alt={`Imagen ${index}`}
+                images.map((image, index) => (
+                  <div
+                    key={index}
                     style={{
                       maxWidth: '100%',
                       maxHeight: '100%',
-                      width: '100%',
-                      height: '100%',
+                      margin: '5px',
+                      width: '150px',
+                      height: '150px',
+                      border: selectedImageIndex === index ? '2px solid blue' : 'none',
                     }}
-                  />
-                </div>
-              ))
-            ) : (
-              <p>No hay plantillas</p>
-            )}
+                    onClick={() => toggleImageSelection(index)}
+                  >
+                    <img
+                      src={image}
+                      alt={`Imagen ${index}`}
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    />
+                  </div>
+                ))
+              ) : (
+                <p>No hay plantillas</p>
+              )}
+            </div>
+          ) : (selectedTab === 'pasadas' ? (
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
+              {/*  mapear las imágenes filtradas */}
+              {filteredImages.length > 0 ? (
+                filteredImages.map((imagePath, index) => (
+                  originalIndex = imagesPathPasadas.indexOf(imagePath),                  
+                  <div
+                    key={index}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      margin: '5px',
+                      width: '150px',
+                      height: '150px',
+                      border: selectedImageIndex === index ? '2px solid blue' : 'none',
+                    }}
+                    onClick={() => toggleImageSelectionPasadas(index)}
+                  >
+                    <img
+                      src={imagesPasadas[originalIndex]}
+                      alt={`Imagen ${index}`}
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    />
+                  </div>
+                ))
+              ) : (
+                <p>No hay imagenes pasadas</p>
+              )}
             </div>
           ) : (
             <>
@@ -246,7 +335,7 @@ const IconModal = ({ onClose }) => {
                   Seleccionar Icono</button>
               )}
               <input type="file" accept=".png, .jpg, .jpeg" ref={fileInput} style={{ display: 'none' }} /></>
-          )}
+          ))}
         </div>
         <div
           style={{
