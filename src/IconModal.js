@@ -10,6 +10,7 @@ const IconModal = ({ onClose }) => {
   const [disabled, setDisabled] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [selectedMyImageIndex, setSelectedMyImageIndex] = useState(null);
+  const [hiddenImages, setHiddenImages] = useState(new Set());
  
   const handleFileUpload = () => {
     fileInput.current.click();
@@ -98,6 +99,14 @@ const IconModal = ({ onClose }) => {
   const handleSelectImage = () => {   
     console.log(selectedImage)
   };
+
+  const deleteImage = (index) => {
+    setHiddenImages(prevHiddenImages => new Set(prevHiddenImages.add(index)));
+    console.log();
+    setSelectedMyImageIndex(null);
+    setSelectedImage(null);
+    setDisabled(false);
+  }
 
 
   useEffect(() => {
@@ -228,7 +237,8 @@ const IconModal = ({ onClose }) => {
             margin: '5px',
             width: '150px',
             height: '150px',
-            border: selectedImageIndex === index ? '2px solid blue' : 'none',
+            border: selectedImageIndex === index ? '2px solid #4f69ff' : 'none',
+            cursor: 'pointer',
           }}
           onClick={() => toggleImageSelection(index)}
         >
@@ -322,34 +332,70 @@ const IconModal = ({ onClose }) => {
     }}
   >
     {myImages.length > 0 ? (
-      myImages.map((image, index) => (
-        <div
-          key={index}
+  myImages.map((image, index) => (
+    !hiddenImages.has(index) && (
+      <div
+        key={index}
+        style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          margin: '5px',
+          width: '150px',
+          height: '150px',
+          border: selectedMyImageIndex === index ? '2px solid #4f69ff' : 'none',
+          position: 'relative',
+          cursor: 'pointer',
+        }}
+        onClick={() => toggleMyImageSelection(index)}
+      >
+        <img
+          src={image}
+          alt={`Imagen ${index}`}
           style={{
             maxWidth: '100%',
             maxHeight: '100%',
-            margin: '5px',
-            width: '150px',
-            height: '150px',
-            border: selectedMyImageIndex === index ? '2px solid blue' : 'none',
+            width: '100%',
+            height: '100%',
           }}
-          onClick={() => toggleMyImageSelection(index)}
-        >
-          <img
-            src={image}
-            alt={`Imagen ${index}`}
+        />
+        {selectedMyImageIndex === index && (
+          <button
             style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              width: '100%',
-              height: '100%',
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              fontSize: '16px',
+              padding: '5px 9px',
+              border: '1px solid #bababa',
+              backgroundColor: 'rgba(241, 241, 241, 0.7)',
+              cursor: 'pointer',
+              transition: 'background-color 0.5s ease',
             }}
-          />
-        </div>
-      ))
-    ) : (
-      <p>No hay iconos</p>
-    )}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(217, 217, 217, 1)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(241, 241, 241, 0.7)';
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteImage(index);
+            }}
+          >
+            <img src="trash.png" alt="Eliminar"
+            style={{
+              width: '25px',
+              height: '25px',
+            }} />
+          </button>
+        )}
+      </div>
+    )
+  ))
+) : (
+  <p>No hay iconos</p>
+)
+}
   </div>
 )}
 
