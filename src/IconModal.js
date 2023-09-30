@@ -239,6 +239,8 @@ const IconModal = ({ onClose }) => {
             height: '150px',
             border: selectedImageIndex === index ? '2px solid #4f69ff' : 'none',
             cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
           }}
           onClick={() => toggleImageSelection(index)}
         >
@@ -246,10 +248,8 @@ const IconModal = ({ onClose }) => {
             src={image}
             alt={`Imagen ${index}`}
             style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              width: '100%',
-              height: '100%',
+              width:"150px",
+              height:"auto"
             }}
           />
         </div>
@@ -265,7 +265,7 @@ const IconModal = ({ onClose }) => {
         <img src={selectedImage}
           style={{
             width: '150px',
-            height: '150px'
+            height: 'auto'
           }} />
         <button type='button'
           onClick={() => {
@@ -345,6 +345,8 @@ const IconModal = ({ onClose }) => {
           border: selectedMyImageIndex === index ? '2px solid #4f69ff' : 'none',
           position: 'relative',
           cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center'
         }}
         onClick={() => toggleMyImageSelection(index)}
       >
@@ -352,10 +354,8 @@ const IconModal = ({ onClose }) => {
           src={image}
           alt={`Imagen ${index}`}
           style={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-            width: '100%',
-            height: '100%',
+            width: '150px',
+            height: 'auto'
           }}
         />
         {selectedMyImageIndex === index && (
